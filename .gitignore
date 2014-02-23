@@ -5,3 +5,4 @@
 *.war
 *.ear
 /MIDI Combiner/nbproject/private/
+/MIDI Combiner/build/

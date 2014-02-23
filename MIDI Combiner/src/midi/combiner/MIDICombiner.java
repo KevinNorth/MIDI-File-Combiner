@@ -3,11 +3,11 @@ package midi.combiner;
 import java.io.File;
 import java.io.IOException;
 import javax.sound.midi.InvalidMidiDataException;
-import javax.sound.midi.Sequence;
-import javax.sound.midi.Sequencer;
 import javax.sound.midi.MidiEvent;
 import javax.sound.midi.MidiSystem;
 import javax.sound.midi.MidiUnavailableException;
+import javax.sound.midi.Sequence;
+import javax.sound.midi.Sequencer;
 import javax.sound.midi.Track;
 
 public class MIDICombiner {
@@ -24,13 +24,13 @@ public class MIDICombiner {
         Track file1Track = file1Sequence.getTracks()[0];
         Track file2Track = file2Sequence.getTracks()[0];
         
-        Track mainTrack1 = mainSequencer.getSequence().createTrack();
-        Track mainTrack2 = mainSequencer.getSequence().createTrack();
+        Track mainTrack1 = mainSequencer.getSequence().getTracks()[0];
+        Track mainTrack2 = mainSequencer.getSequence().getTracks()[1];
         
         copyEventsToTrack(file1Track, mainTrack1);
         copyEventsToTrack(file2Track, mainTrack2);
         
-        
+        saveMidiFile(mainSequencer.getSequence());
     }
     
     public static Sequencer openSequencer(float divisionType, int resolution,
@@ -53,5 +53,11 @@ public class MIDICombiner {
             MidiEvent event = sourceTrack.get(i);
             destinationTrack.add(event);
         }
+    }
+    
+    public static void saveMidiFile(Sequence sequence) throws IOException {
+        int[] fileTypes = MidiSystem.getMidiFileTypes(sequence);
+        File file = new File("out.mid");
+        MidiSystem.write(sequence, fileTypes[0], file);
     }
 }
