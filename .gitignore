@@ -4,3 +4,4 @@
 *.jar
 *.war
 *.ear
+/MIDI Combiner/nbproject/private/
