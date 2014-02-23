@@ -1,19 +1,27 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package midi.combiner;
 
-/**
- *
- * @author ThePondermatic
- */
-public class MIDICombiner {
+import java.io.File;
+import java.io.IOException;
+import javax.sound.midi.InvalidMidiDataException;
+import javax.sound.midi.Sequence;
+import javax.sound.midi.Sequencer;
+import javax.sound.midi.MidiSystem;
+import javax.sound.midi.MidiUnavailableException;
 
-    /**
-     * @param args the command line arguments
-     */
-    public static void main(String[] args) {
-        // TODO code application logic here
+public class MIDICombiner {
+    public static void main(String[] args)
+            throws Exception //Since this is a proof-of-concept program, we won't worry about robust error-handling
+    {
+        Sequencer sequencer = openSequencer();
+    }
+    
+    public static Sequencer openSequencer() throws MidiUnavailableException {
+        return MidiSystem.getSequencer();
+    }
+    
+    public static void openMidiFile(String fileName, Sequencer sequencer) throws IOException, InvalidMidiDataException {
+        File file = new File(fileName);
+        Sequence seq = MidiSystem.getSequence(file);
+        sequencer.setSequence(seq);
     }
 }
