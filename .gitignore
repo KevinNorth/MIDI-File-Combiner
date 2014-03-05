@@ -5,7 +5,5 @@
 *.war
 *.ear
 out.mid
-/MIDI Combiner/nbproject/
-/MIDI Combiner/build/
-/Music ++/nbproject/private/
+/Music ++/nbproject/
 /Music ++/build/
