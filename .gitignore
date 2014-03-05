@@ -4,5 +4,6 @@
 *.jar
 *.war
 *.ear
-/MIDI Combiner/nbproject/private/
+out.mid
+/MIDI Combiner/nbproject/
 /MIDI Combiner/build/
