@@ -1,5 +1,5 @@
-package musicplusplusinterfaces.lists;
+
 
 public enum DataStructureNodeType {
-    INT, DOUBLE, BOOLEAN, FLOAT, STRING
+    INT, DOUBLE, BOOLEAN, FLOAT, STRING, CHAR, BYTE
 }
