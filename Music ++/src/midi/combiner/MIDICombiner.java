@@ -16,25 +16,61 @@ public class MIDICombiner {
     public static void main(String[] args)
             throws Exception //Since this is a proof-of-concept program, we won't worry about robust error-handling
     {
-        Sequence file1Sequence = openMidiFile("1.mid");
-        Sequence file2Sequence = openMidiFile("2.mid");
+        Sequence stringSequence = openMidiFile("String.mid");
+        Sequence integerSequence = openMidiFile("Integer.mid");
+        Sequence plusSequence = openMidiFile("Plus.mid");
+        Sequence whileBodySequence = openMidiFile("While_Body.mid");
+        Sequence whileConditionSequence = openMidiFile("whileCondition.mid");
         
-        Sequencer mainSequencer = openSequencer(file1Sequence.getDivisionType(),
-                file1Sequence.getResolution(), 2);
+        Sequencer outSequencer = openSequencer(stringSequence.getDivisionType(),
+                stringSequence.getResolution(), 3);
 
-        Track file1Track = file1Sequence.getTracks()[0];
-        Track file2Track = file2Sequence.getTracks()[0];
+        Track stringTrack = stringSequence.getTracks()[0];
+        Track integerTrack = integerSequence.getTracks()[0];
+        Track plusTrack = plusSequence.getTracks()[0];
+        Track whileBodyTrack = whileBodySequence.getTracks()[0];
+        Track whileConditionTrack = whileConditionSequence.getTracks()[0];
         
-        Track mainTrack1 = mainSequencer.getSequence().getTracks()[0];
-        Track mainTrack2 = mainSequencer.getSequence().getTracks()[1];
+        Track mainTrack1 = outSequencer.getSequence().getTracks()[0];
+        Track mainTrack2 = outSequencer.getSequence().getTracks()[1];
+        Track mainTrack3 = outSequencer.getSequence().getTracks()[2];
         
-        copyEventsToTrack(file1Track, mainTrack1, 0, 0, file1Sequence);
-        copyEventsToTrack(file2Track, mainTrack2, 1, 1, file2Sequence);
+        //First measure: Just the string
+        copyEventsToTrack(stringTrack, mainTrack1, 0, 0, stringSequence);
+
+        //Second meausre: Just the int        
+        copyEventsToTrack(integerTrack, mainTrack1, 0, 1, stringSequence);
         
-//        setTrackInstrument(mainTrack1, 1, 0); //Set piano
-//        setTrackInstrument(mainTrack2, 41, 1); //Set violin
+        //Third measure: Just the condition
+        copyEventsToTrack(whileConditionTrack, mainTrack1, 0, 2, whileConditionSequence);
         
-        saveMidiFile(mainSequencer.getSequence());
+        //Fourth measure: While body, string, and add
+        copyEventsToTrack(whileBodyTrack, mainTrack1, 0, 3, whileBodySequence);
+        copyEventsToTrack(stringTrack, mainTrack2, 1, 3, stringSequence);
+        copyEventsToTrack(plusTrack, mainTrack3, 2, 3, plusSequence);
+
+        // Fifth measure: While body, integer, and add
+        copyEventsToTrack(whileBodyTrack, mainTrack1, 0, 4, whileBodySequence);
+        copyEventsToTrack(integerTrack, mainTrack2, 1, 4, integerSequence);
+        copyEventsToTrack(plusTrack, mainTrack3, 2, 4, plusSequence);
+
+        // Sixth measure: Just the condition
+        copyEventsToTrack(whileConditionTrack, mainTrack1, 0, 5, whileConditionSequence);
+        
+        //Seventh measure: While body, string, and add
+        copyEventsToTrack(whileBodyTrack, mainTrack1, 0, 6, whileBodySequence);
+        copyEventsToTrack(stringTrack, mainTrack2, 1, 6, stringSequence);
+        copyEventsToTrack(plusTrack, mainTrack3, 2, 6, plusSequence);
+
+        // Eighth measure: While body, integer, and add
+        copyEventsToTrack(whileBodyTrack, mainTrack1, 0, 7, whileBodySequence);
+        copyEventsToTrack(integerTrack, mainTrack2, 1, 7, integerSequence);
+        copyEventsToTrack(plusTrack, mainTrack3, 2, 7, plusSequence);
+        
+        // Ninth measure: Just the condition one last time
+        copyEventsToTrack(whileConditionTrack, mainTrack1, 0, 8, whileConditionSequence);
+        
+        saveMidiFile(outSequencer.getSequence());
     }
     
     public static Sequencer openSequencer(float divisionType, int resolution,
@@ -57,8 +93,6 @@ public class MIDICombiner {
         
         int ticksPerMeasure = sequenceWithTimingFormat.getResolution() * 4;
         int ticksToAdd = ticksPerMeasure * measure;
-        
-        System.out.println(numEvents);
         
         for(int i = 0; i < numEvents; i++) {
             MidiEvent event = sourceTrack.get(i);
@@ -83,12 +117,7 @@ public class MIDICombiner {
         MidiMessage messageToChange = eventToChange.getMessage();
         
         int channelBitmask = channel | 0xF0;
-        System.out.println("Channel bitmask: " + Integer.toBinaryString(channelBitmask));
-        
         int newMessageStatusBitmask = (messageToChange.getStatus() | 0x0F);
-        System.out.println("Status bitmask: " + Integer.toBinaryString(newMessageStatusBitmask));
-        System.out.println("Status: " + Integer.toBinaryString(messageToChange.getStatus()));
-
         int newMessageStatus = newMessageStatusBitmask & channelBitmask;
         
         MidiMessage newMessage;
