@@ -4,6 +4,8 @@
 *.jar
 *.war
 *.ear
+
+*.DS_Store
 out.mid
 /Music ++/nbproject/
 /Music ++/build/
