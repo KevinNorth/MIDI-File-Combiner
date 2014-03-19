@@ -9,30 +9,31 @@ import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 
-/*import musicplusplusinterfaces.lists.DataStructureNode;
-import musicplusplusinterfaces.lists.DataStructureNodeType;
-import musicplusplusinterfaces.lists.ExecutionPath;
-import musicplusplusinterfaces.lists.Operation;
-import musicplusplusinterfaces.lists.ScopeNode;
-import musicplusplusinterfaces.lists.ScopeNodeType;*/
-
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
 
 public class MusicParser {
 
-	ExecutionPath path;
+	public ExecutionPath path;
+	
 	//boolean dsFlag;
 	//int lineNumber;
 	
-	public static void main(String[] args) {
-		
-		File coverage = new File("coverage.xml");
-		int num = getLineNumberFromXML(9, coverage);
-		
-		System.out.println("Num: " + num);
-	}
+//	public static void main(String[] args) {
+//		
+//		File coverage = new File("coverage.xml");
+//		File source1 = new File("source1.txt");
+//		File source2 = new File("source2.txt");
+//		File source3 = new File("source2.txt");
+//		
+//		path = parseFile(coverage,source1);
+//		
+//		
+////		int num = getLineNumberFromXML(9, coverage);
+////		
+////		System.out.println("Num: " + num);
+//	}
 	
 	public ExecutionPath parseFile(File xmlOutput, File sourceFile){
 		
@@ -107,7 +108,7 @@ public class MusicParser {
 // LOGIC CONSTRUCTORS
 					
 /*WHILE*/			case "while":
-						//TODO: logic to find number of iterations in XML file and of next line
+						numIterations = getLineNumberFromXML(lineNumber, coverage);
 						scopeNode = new ScopeNode(null, numIterations);
 						scopeNode.setType(ScopeNodeType.WHILE);
 						
@@ -140,7 +141,7 @@ public class MusicParser {
 					break;
 					
 /*Do-While*/		case "do":
-						//TODO: logic to find number of iterations in XML file
+						numIterations = getLineNumberFromXML(lineNumber, coverage);
 						scopeNode = new ScopeNode(null, numIterations);
 						scopeNode.setType(ScopeNodeType.DOWHILE);
 						
@@ -177,7 +178,7 @@ public class MusicParser {
 					break;
 					
 /*For*/				case "for":
-						//TODO: logic to find number of iterations in XML file and nextLineIterations
+						numIterations = getLineNumberFromXML(lineNumber, coverage);
 						scopeNode = new ScopeNode(null, numIterations);
 						scopeNode.setType(ScopeNodeType.FOR);
 						
@@ -239,37 +240,37 @@ public class MusicParser {
 		switch(value){
 			case "int":
 				node = new DataStructureNode(parent, DataStructureNodeType.INT, checkOperation(sCurrentLine));
-				path.addNode(node);
+				parent.addChild(node);
 			break;
 			
 			case "double":
 				node = new DataStructureNode(parent, DataStructureNodeType.DOUBLE, checkOperation(sCurrentLine));
-				path.addNode(node);
+				parent.addChild(node);
 			break;
 			
 			case "float":
 				node = new DataStructureNode(parent, DataStructureNodeType.FLOAT, checkOperation(sCurrentLine));
-				path.addNode(node);
+				parent.addChild(node);
 			break;
 			
 			case "String":
 				node = new DataStructureNode(parent, DataStructureNodeType.STRING, checkOperation(sCurrentLine));
-				path.addNode(node);
+				parent.addChild(node);
 			break;
 			
 			case "char":
 				node = new DataStructureNode(parent, DataStructureNodeType.CHAR, checkOperation(sCurrentLine));
-				path.addNode(node);
+				parent.addChild(node);
 			break;
 			
 			case "byte":
 				node = new DataStructureNode(parent, DataStructureNodeType.BYTE, checkOperation(sCurrentLine));
-				path.addNode(node);
+				parent.addChild(node);
 			break;
 			
 			case "boolean":
 				node = new DataStructureNode(parent, DataStructureNodeType.BOOLEAN, checkOperation(sCurrentLine));
-				path.addNode(node);
+				parent.addChild(node);
 			break;
 		}
 		
@@ -291,7 +292,6 @@ public class MusicParser {
 					
 	}
 	
-	//TODO: Find number of iterations in XML file for a particular line number
 	public static int getLineNumberFromXML(int lineNumber, File coverage){
 		int hitsNumber = -1;
 		try {
@@ -342,11 +342,12 @@ public class MusicParser {
 		return hitsNumber;
 	}
 	
+	/* Not being used.
 	private static String getValue(String tag, Element element) {
 		NodeList nodes = ((org.w3c.dom.Document) element).getElementsByTagName(tag).item(0).getChildNodes();
 		Node node = (Node) nodes.item(0);
 		return node.getNodeValue();
 	}
-		
+	*/
 	
 }
