@@ -2,18 +2,19 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
+import java.util.regex.Pattern;
 
 import javax.lang.model.element.Element;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 
-import musicplusplusinterfaces.lists.DataStructureNode;
+/*import musicplusplusinterfaces.lists.DataStructureNode;
 import musicplusplusinterfaces.lists.DataStructureNodeType;
 import musicplusplusinterfaces.lists.ExecutionPath;
 import musicplusplusinterfaces.lists.Operation;
 import musicplusplusinterfaces.lists.ScopeNode;
-import musicplusplusinterfaces.lists.ScopeNodeType;
+import musicplusplusinterfaces.lists.ScopeNodeType;*/
 
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
@@ -28,7 +29,7 @@ public class MusicParser {
 	public static void main(String[] args) {
 		
 		File coverage = new File("coverage.xml");
-		int num = getLineNumberFromXML(1, coverage);
+		int num = getLineNumberFromXML(9, coverage);
 		
 		System.out.println("Num: " + num);
 	}
@@ -220,11 +221,11 @@ public class MusicParser {
 
 //				System.out.println(sCurrentLine);
 			}
- 
+			br.close();
 		} catch (IOException e) {
 			e.printStackTrace();
 		} 
-		
+	
 		
 		return path;
 		
@@ -292,8 +293,28 @@ public class MusicParser {
 	
 	//TODO: Find number of iterations in XML file for a particular line number
 	public static int getLineNumberFromXML(int lineNumber, File coverage){
+		int hitsNumber = -1;
 		try {
-			DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
+			//Pattern lineHits = Pattern.compile("<line number=\"" + lineNumber + "\"");
+			BufferedReader xmlReader = new BufferedReader(new FileReader(coverage));
+			String xmlLine = xmlReader.readLine();
+			
+			String pattern = "<line number=\"" + lineNumber +"\"";
+			
+			while(!xmlLine.contains(pattern)){
+				xmlLine = xmlReader.readLine();
+			}
+			//Now xmlLine should have the correct line entry that we need to process
+			
+			String[] entries = xmlLine.split(" ");
+			//Puts together an array with {"<line", "number="lineNumber"", "hits="hitsNumber"", etc(after this we don't care)
+			
+			entries[2] = entries[2].substring(6, entries[2].length() - 1);
+			//This should get the substring between the "" in the hits entry
+			
+			hitsNumber = Integer.parseInt(entries[2]);
+			
+			/*DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
 			DocumentBuilder dBuilder;
 			dBuilder = dbFactory.newDocumentBuilder();
 			
@@ -311,12 +332,14 @@ public class MusicParser {
 //					System.out.println("Stock Price: " + getValue("price", element));
 //					System.out.println("Stock Quantity: " + getValue("quantity", element));
 				}
-			}
+			}*/
+			
+			xmlReader.close();
 		} catch (Exception ex) {
 			ex.printStackTrace();
 		}
 
-		return 0;
+		return hitsNumber;
 	}
 	
 	private static String getValue(String tag, Element element) {
