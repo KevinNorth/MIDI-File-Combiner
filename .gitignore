@@ -7,5 +7,8 @@
 
 *.DS_Store
 out.mid
+while_demo.mid
+for_demo.mid
+loopless_demo.mid
 /Music ++/nbproject/
 /Music ++/build/

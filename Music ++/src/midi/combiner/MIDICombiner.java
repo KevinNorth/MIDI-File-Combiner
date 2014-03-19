@@ -21,56 +21,132 @@ public class MIDICombiner {
         Sequence plusSequence = openMidiFile("Plus.mid");
         Sequence whileBodySequence = openMidiFile("While_Body.mid");
         Sequence whileConditionSequence = openMidiFile("whileCondition.mid");
+        Sequence forBodySquence = openMidiFile("for_-_body.mid");
+        Sequence forConditionSquence = openMidiFile("for_-_condition.mid");
         
-        Sequencer outSequencer = openSequencer(stringSequence.getDivisionType(),
-                stringSequence.getResolution(), 3);
-
         Track stringTrack = stringSequence.getTracks()[0];
         Track integerTrack = integerSequence.getTracks()[0];
         Track plusTrack = plusSequence.getTracks()[0];
         Track whileBodyTrack = whileBodySequence.getTracks()[0];
         Track whileConditionTrack = whileConditionSequence.getTracks()[0];
+        Track forBodyTrack = forBodySquence.getTracks()[0];
+        Track forConditionTrack = forConditionSquence.getTracks()[0];
+        
+        generateWhileDemo(stringTrack, integerTrack, plusTrack, whileBodyTrack,
+                whileConditionTrack, stringSequence);
+        generateForDemo(stringTrack, plusTrack, forBodyTrack, forConditionTrack,
+                stringSequence);
+        generateLooplessDemo(stringTrack, plusTrack, stringSequence);
+    }
+    
+    public static void generateWhileDemo(Track stringTrack, Track integerTrack,
+            Track plusTrack, Track whileBodyTrack, Track whileConditionTrack,
+            Sequence referenceSequence) throws MidiUnavailableException,
+            InvalidMidiDataException, IOException
+    {
+        Sequencer outSequencer = openSequencer(referenceSequence.getDivisionType(),
+                referenceSequence.getResolution(), 3);
         
         Track mainTrack1 = outSequencer.getSequence().getTracks()[0];
         Track mainTrack2 = outSequencer.getSequence().getTracks()[1];
         Track mainTrack3 = outSequencer.getSequence().getTracks()[2];
         
         //First measure: Just the string
-        copyEventsToTrack(stringTrack, mainTrack1, 0, 0, stringSequence);
+        copyEventsToTrack(stringTrack, mainTrack1, 0, 0, referenceSequence);
 
         //Second meausre: Just the int        
-        copyEventsToTrack(integerTrack, mainTrack1, 0, 1, stringSequence);
+        copyEventsToTrack(integerTrack, mainTrack1, 0, 1, referenceSequence);
         
         //Third measure: Just the condition
-        copyEventsToTrack(whileConditionTrack, mainTrack1, 0, 2, whileConditionSequence);
+        copyEventsToTrack(whileConditionTrack, mainTrack1, 0, 2, referenceSequence);
         
         //Fourth measure: While body, string, and add
-        copyEventsToTrack(whileBodyTrack, mainTrack1, 0, 3, whileBodySequence);
-        copyEventsToTrack(stringTrack, mainTrack2, 1, 3, stringSequence);
-        copyEventsToTrack(plusTrack, mainTrack3, 2, 3, plusSequence);
+        copyEventsToTrack(whileBodyTrack, mainTrack1, 0, 3, referenceSequence);
+        copyEventsToTrack(stringTrack, mainTrack2, 1, 3, referenceSequence);
+        copyEventsToTrack(plusTrack, mainTrack3, 2, 3, referenceSequence);
 
         // Fifth measure: While body, integer, and add
-        copyEventsToTrack(whileBodyTrack, mainTrack1, 0, 4, whileBodySequence);
-        copyEventsToTrack(integerTrack, mainTrack2, 1, 4, integerSequence);
-        copyEventsToTrack(plusTrack, mainTrack3, 2, 4, plusSequence);
+        copyEventsToTrack(whileBodyTrack, mainTrack1, 0, 4, referenceSequence);
+        copyEventsToTrack(integerTrack, mainTrack2, 1, 4, referenceSequence);
+        copyEventsToTrack(plusTrack, mainTrack3, 2, 4, referenceSequence);
 
         // Sixth measure: Just the condition
-        copyEventsToTrack(whileConditionTrack, mainTrack1, 0, 5, whileConditionSequence);
+        copyEventsToTrack(whileConditionTrack, mainTrack1, 0, 5, referenceSequence);
         
         //Seventh measure: While body, string, and add
-        copyEventsToTrack(whileBodyTrack, mainTrack1, 0, 6, whileBodySequence);
-        copyEventsToTrack(stringTrack, mainTrack2, 1, 6, stringSequence);
-        copyEventsToTrack(plusTrack, mainTrack3, 2, 6, plusSequence);
+        copyEventsToTrack(whileBodyTrack, mainTrack1, 0, 6, referenceSequence);
+        copyEventsToTrack(stringTrack, mainTrack2, 1, 6, referenceSequence);
+        copyEventsToTrack(plusTrack, mainTrack3, 2, 6, referenceSequence);
 
         // Eighth measure: While body, integer, and add
-        copyEventsToTrack(whileBodyTrack, mainTrack1, 0, 7, whileBodySequence);
-        copyEventsToTrack(integerTrack, mainTrack2, 1, 7, integerSequence);
-        copyEventsToTrack(plusTrack, mainTrack3, 2, 7, plusSequence);
+        copyEventsToTrack(whileBodyTrack, mainTrack1, 0, 7, referenceSequence);
+        copyEventsToTrack(integerTrack, mainTrack2, 1, 7, referenceSequence);
+        copyEventsToTrack(plusTrack, mainTrack3, 2, 7, referenceSequence);
         
         // Ninth measure: Just the condition one last time
-        copyEventsToTrack(whileConditionTrack, mainTrack1, 0, 8, whileConditionSequence);
+        copyEventsToTrack(whileConditionTrack, mainTrack1, 0, 8, referenceSequence);
         
-        saveMidiFile(outSequencer.getSequence());
+        saveMidiFile(outSequencer.getSequence(), "while_demo.mid");
+    }
+
+    public static void generateForDemo(Track stringTrack, Track plusTrack,
+            Track forBodyTrack, Track forConditionTrack, Sequence referenceSequence)
+            throws MidiUnavailableException, InvalidMidiDataException, IOException
+    {
+        Sequencer outSequencer = openSequencer(referenceSequence.getDivisionType(),
+                referenceSequence.getResolution(), 3);
+        
+        Track mainTrack1 = outSequencer.getSequence().getTracks()[0];
+        Track mainTrack2 = outSequencer.getSequence().getTracks()[1];
+        Track mainTrack3 = outSequencer.getSequence().getTracks()[1];
+        
+        //First measure: Just the string
+        copyEventsToTrack(stringTrack, mainTrack1, 0, 0, referenceSequence);
+        
+        //Second measure: For condition
+        copyEventsToTrack(forConditionTrack, mainTrack1, 0, 1, referenceSequence);
+
+        //Third measure: Concatenate the string
+        copyEventsToTrack(stringTrack, mainTrack1, 0, 2, referenceSequence);
+        copyEventsToTrack(plusTrack, mainTrack2, 1, 2, referenceSequence);
+        copyEventsToTrack(forBodyTrack, mainTrack3, 2, 2, referenceSequence);
+        
+        //Fourth measure: For condition
+        copyEventsToTrack(forConditionTrack, mainTrack1, 0, 3, referenceSequence);
+
+        //Fifth measure: Concatenate the string
+        copyEventsToTrack(stringTrack, mainTrack1, 0, 4, referenceSequence);
+        copyEventsToTrack(plusTrack, mainTrack2, 1, 4, referenceSequence);
+        copyEventsToTrack(forBodyTrack, mainTrack3, 2, 4, referenceSequence);
+
+        //Sixth measure: For condition (the check that evaluates to false)
+        copyEventsToTrack(forConditionTrack, mainTrack1, 0, 5, referenceSequence);
+        
+        saveMidiFile(outSequencer.getSequence(), "for_demo.mid");
+    }
+    
+    public static void generateLooplessDemo(Track stringTrack,
+            Track plusTrack, Sequence referenceSequence)
+            throws MidiUnavailableException, InvalidMidiDataException, IOException
+    {
+        Sequencer outSequencer = openSequencer(referenceSequence.getDivisionType(),
+                referenceSequence.getResolution(), 2);
+        
+        Track mainTrack1 = outSequencer.getSequence().getTracks()[0];
+        Track mainTrack2 = outSequencer.getSequence().getTracks()[1];
+        
+        //First measure: Just the string
+        copyEventsToTrack(stringTrack, mainTrack1, 0, 0, referenceSequence);
+
+        //Second meausre: Concatenate the string
+        copyEventsToTrack(stringTrack, mainTrack1, 0, 1, referenceSequence);
+        copyEventsToTrack(plusTrack, mainTrack2, 1, 1, referenceSequence);
+        
+        //Third meausre: Concatenate the string again
+        copyEventsToTrack(stringTrack, mainTrack1, 0, 2, referenceSequence);
+        copyEventsToTrack(plusTrack, mainTrack2, 1, 2, referenceSequence);
+                
+        saveMidiFile(outSequencer.getSequence(), "loopless_demo.mid");
     }
     
     public static Sequencer openSequencer(float divisionType, int resolution,
@@ -165,9 +241,9 @@ public class MIDICombiner {
         }
     }
         
-    public static void saveMidiFile(Sequence sequence) throws IOException {
+    public static void saveMidiFile(Sequence sequence, String filename) throws IOException {
         int[] fileTypes = MidiSystem.getMidiFileTypes(sequence);
-        File file = new File("out.mid");
+        File file = new File(filename);
         MidiSystem.write(sequence, fileTypes[0], file);
     }
 }
