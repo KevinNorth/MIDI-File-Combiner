@@ -40,6 +40,14 @@ public class ScopeNode extends Node {
     
     public boolean playComparisonAtEnd() {
         return type == ScopeNodeType.FOR
+                || type == ScopeNodeType.WHILE
+                || type == ScopeNodeType.DOWHILE;
+    }
+    
+    public boolean playComparisonAtBeginning() {
+        return type == ScopeNodeType.ELSEIF
+                || type == ScopeNodeType.IF
+                || type == ScopeNodeType.FOR
                 || type == ScopeNodeType.WHILE;
     }
 }
