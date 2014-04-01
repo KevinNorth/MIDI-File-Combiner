@@ -48,24 +48,99 @@ public final class MusicGenerator {
         if(DataStructureMap == null) {
             DataStructureMap = new EnumMap<>(DataStructureNodeType.class);
             
-            Sequence stringSequence = MidiUtilities.openMidiFile("midi/string.mid");
+            Sequence booleanSequence = MidiUtilities.openMidiFile("midi/data_structures/boolean.mid");
+            Sequence byteSequence = MidiUtilities.openMidiFile("midi/data_structures/byte.mid");
+            Sequence charSequence = MidiUtilities.openMidiFile("midi/data_structures/char.mid");
+            Sequence doubleSequence = MidiUtilities.openMidiFile("midi/data_structures/double.mid");
+            Sequence floatSequence = MidiUtilities.openMidiFile("midi/data_structures/float.mid");
+            Sequence integerSequence = MidiUtilities.openMidiFile("midi/data_structures/integer.mid");
+            Sequence stringSequence = MidiUtilities.openMidiFile("midi/data_structures/string.mid");
+
+            Track booleanTrack = booleanSequence.getTracks()[0];
+            Track byteTrack = byteSequence.getTracks()[0];
+            Track charTrack = charSequence.getTracks()[0];
+            Track doubleTrack = doubleSequence.getTracks()[0];
+            Track floatTrack = floatSequence.getTracks()[0];
+            Track integerTrack = integerSequence.getTracks()[0];
+            Track stringTrack = stringSequence.getTracks()[0];
             
+            DataStructureMap.put(DataStructureNodeType.BOOLEAN, booleanTrack);
+            DataStructureMap.put(DataStructureNodeType.BYTE, byteTrack);
+            DataStructureMap.put(DataStructureNodeType.CHAR, charTrack);
+            DataStructureMap.put(DataStructureNodeType.DOUBLE, doubleTrack);
+            DataStructureMap.put(DataStructureNodeType.FLOAT, floatTrack);
+            DataStructureMap.put(DataStructureNodeType.INT, integerTrack);
+            DataStructureMap.put(DataStructureNodeType.STRING, stringTrack);
         }
 
         if(ScopeBodyMap == null) {
-            //TODO
+            ScopeBodyMap = new EnumMap<>(ScopeNodeType.class);
+            
+            Sequence doWhileSequence = MidiUtilities.openMidiFile("midi/scope_bodies/do_while.mid");
+            Sequence elseIfSequence = MidiUtilities.openMidiFile("midi/scope_bodies/else_if.mid");
+            Sequence elseSequence = MidiUtilities.openMidiFile("midi/scope_bodies/else.mid");
+            Sequence ifSequence = MidiUtilities.openMidiFile("midi/scope_bodies/if.mid");
+            Sequence forSequence = MidiUtilities.openMidiFile("midi/scope_bodies/for.mid");
+            Sequence whileSequence = MidiUtilities.openMidiFile("midi/scope_bodies/while.mid");
+            
+            Track doWhileTrack = doWhileSequence.getTracks()[0];
+            Track elseIfTrack = elseIfSequence.getTracks()[0];
+            Track elseTrack = elseSequence.getTracks()[0];
+            Track ifTrack = ifSequence.getTracks()[0];
+            Track forTrack = forSequence.getTracks()[0];
+            Track whileTrack = whileSequence.getTracks()[0];
+            
+            ScopeBodyMap.put(ScopeNodeType.DOWHILE, doWhileTrack);
+            ScopeBodyMap.put(ScopeNodeType.ELSEIF, elseIfTrack);
+            ScopeBodyMap.put(ScopeNodeType.ELSE, elseTrack);
+            ScopeBodyMap.put(ScopeNodeType.IF, ifTrack);
+            ScopeBodyMap.put(ScopeNodeType.FOR, forTrack);
+            ScopeBodyMap.put(ScopeNodeType.WHILE, whileTrack);
         }
 
         if(ScopeConditionMap == null) {
-            //TODO
+            ScopeConditionMap = new EnumMap<>(ScopeNodeType.class);
+
+            Sequence forSequence = MidiUtilities.openMidiFile("midi/scope_conditions/for.mid");
+            Sequence whileSequence = MidiUtilities.openMidiFile("midi/scope_conditions/while.mid");
+            Sequence ifSequence = MidiUtilities.openMidiFile("midi/scope_conditions/if.mid");
+            Sequence elseIfSequence = MidiUtilities.openMidiFile("midi/scope_conditions/else_if.mid");
+            Sequence doWhileSequence = MidiUtilities.openMidiFile("midi/scope_conditions/do_while.mid");
+            
+            Track doWhileTrack = doWhileSequence.getTracks()[0];
+            Track elseIfTrack = elseIfSequence.getTracks()[0];
+            Track ifTrack = ifSequence.getTracks()[0];
+            Track forTrack = forSequence.getTracks()[0];
+            Track whileTrack = whileSequence.getTracks()[0];
+            
+            ScopeConditionMap.put(ScopeNodeType.DOWHILE, doWhileTrack);
+            ScopeConditionMap.put(ScopeNodeType.ELSEIF, elseIfTrack);
+            ScopeConditionMap.put(ScopeNodeType.IF, ifTrack);
+            ScopeConditionMap.put(ScopeNodeType.FOR, forTrack);
+            ScopeConditionMap.put(ScopeNodeType.WHILE, whileTrack);
         }
 
         if(OperationMap == null) {
-            //TODO
+            OperationMap = new EnumMap<>(Operation.class);
+            
+            Sequence plusSequence = MidiUtilities.openMidiFile("midi/operations/plus.mid");
+            Sequence minusSequence = MidiUtilities.openMidiFile("midi/operations/minus.mid");
+            Sequence multiplySequence = MidiUtilities.openMidiFile("midi/operations/multiply.mid");
+            Sequence divideSequence = MidiUtilities.openMidiFile("midi/operations/divide.mid");
+            
+            Track plusTrack = plusSequence.getTracks()[0];
+            Track minusTrack = minusSequence.getTracks()[0];
+            Track multiplyTrack = multiplySequence.getTracks()[0];
+            Track divideTrack = divideSequence.getTracks()[0];
+            
+            OperationMap.put(Operation.ADD, plusTrack);
+            OperationMap.put(Operation.SUBTRACT, minusTrack);
+            OperationMap.put(Operation.MULTIPLY, multiplyTrack);
+            OperationMap.put(Operation.DIVIDE, divideTrack);
         }
         
         if(ReferenceSequence == null) {
-            ReferenceSequence = MidiUtilities.openMidiFile("midi/string.mid");
+            ReferenceSequence = MidiUtilities.openMidiFile("midi/data_structures/string.mid");
         }
     }
 
@@ -125,9 +200,11 @@ public final class MusicGenerator {
      * @return The measure number immediately after this subtree's musical
      *      representation ends. The next measure of music should be appended
      *      at this measure. (Starts from 0 for the first measure.)
+     * @throws InvalidMidiDataException If there's a problem creating the MIDI
+     *      file
      */
     private static int parseNodes(List<ScopeNode> parentNodes, Node currentNode,
-        Sequencer midi, int measureNumber) {
+        Sequencer midi, int measureNumber) throws InvalidMidiDataException {
             
         if(currentNode instanceof DataStructureNode) {
             addLayers(parentNodes, currentNode, midi, measureNumber);
@@ -181,123 +258,97 @@ public final class MusicGenerator {
      *      associated MIDI file. This argument will be modified in place.
      * @param measureNumber The current measure number of the MIDI file. (Start
      *      from 0 for the first measure.)
+     * @throws InvalidMidiDataException If there's a problem appending to the
+     *      MIDI file
      */
     private static void addLayers(List<ScopeNode> parentNodes, Node currentNode,
-            Sequencer midi, int measureNumber) {
+            Sequencer midi, int measureNumber) throws InvalidMidiDataException {
         System.out.println("---------");
         System.out.println("Measure " + measureNumber + ":");
+
+        int channel = 0;
+        int numExistingTracks = midi.getSequence().getTracks().length;
+        Sequence sequence = midi.getSequence();
         
+        // Add layers for loop/if statement bodies
         for(ScopeNode parentNode : parentNodes) {
-            switch(parentNode.getType()) {
-                case FOR:
-                    System.out.println("For body");
-                    break;
-                case WHILE:
-                    System.out.println("While body");
-                    break;
-                case DOWHILE:
-                    System.out.println("Do/While body");
-                    break;
-                case IF:
-                    System.out.println("If body");
-                    break;
-                case ELSEIF:
-                    System.out.println("Else if body");
-                    break;
-                case ELSE:
-                    System.out.println("Else body");
-                    break;
-                case SWITCHBODY:
-                    System.out.println("Switch body");
-                    break;
-                default:
-                    throw new RuntimeException("The switch statement for scope "
-                            + "bodies in MusicGenerator.addLayers() fell through");
+            Track bodyTrack = ScopeBodyMap.get(parentNode.getType());
+        
+            // We want to make sure we have enough tracks,
+            // but only add tracks when we need more of them
+            if(channel >= numExistingTracks) {
+                sequence.createTrack();
+                numExistingTracks = sequence.getTracks().length;
             }
-        }
             
+            MidiUtilities.copyEventsToTrack(bodyTrack,
+                    sequence.getTracks()[channel], channel, measureNumber,
+                    ReferenceSequence);
+            
+            channel++;
+        }
+        
+        // Note that because we've been incrementing channel, it should
+        // now be at the right value for the next part of the algorithm
+        
         if(currentNode instanceof DataStructureNode) {
+            /*
+             * Add layer for the data structure 
+             */
             DataStructureNode currentDataStructureNode =
                     (DataStructureNode) currentNode;
-            switch(currentDataStructureNode.getType()) {
-                case BOOLEAN:
-                    System.out.println("Boolean");
-                    break;
-                case BYTE:
-                    System.err.println("Byte");
-                    break;
-                case CHAR:
-                    System.err.println("Char");
-                    break;
-                case DOUBLE:
-                    System.out.println("Double");
-                    break;
-                case FLOAT:
-                    System.out.println("Float");
-                    break;
-                case INT:
-                    System.out.println("Integer");
-                    break;
-                case STRING:
-                    System.out.println("String");
-                    break;
-                default:
-                    throw new RuntimeException("The switch statement for data "
-                        + "structure types in MusicGenerator.addLayers() "
-                        + "fell through");
+
+            Track structureTrack =
+                    DataStructureMap.get(currentDataStructureNode.getType());
+            
+            // We want to make sure we have enough tracks,
+            // but only add tracks when we need more of them
+            if(channel >= numExistingTracks) {
+                sequence.createTrack();
+                numExistingTracks = sequence.getTracks().length;
+            }
+            
+            MidiUtilities.copyEventsToTrack(structureTrack,
+                    sequence.getTracks()[channel], channel, measureNumber,
+                    ReferenceSequence);
+            
+            /*
+             * Add layer for the operation (but skip if operation is NONE)
+             */
+            if(currentDataStructureNode.getOperation() == Operation.NONE) {
+                return;
+            }
+            
+            System.out.println("Outputting operation");
+            
+            channel++;
+            Track operationTrack =
+                    OperationMap.get(currentDataStructureNode.getOperation());
+            
+            // We want to make sure we have enough tracks,
+            // but only add tracks when we need more of them
+            if(channel >= numExistingTracks) {
+                sequence.createTrack();
             }
 
-            switch(currentDataStructureNode.getOperation()) {
-                case ADD:
-                    System.out.println("Addition");
-                    break;
-                case COMPARE:
-                    System.out.println("Comparison");
-                    break;
-                case DIVIDE:
-                    System.out.println("Divide");
-                    break;
-                case MULTIPLY:
-                    System.out.println("Multiply");
-                    break;
-                case SUBTRACT:
-                    System.out.println("Subtraction");
-                    break;
-                case NONE: break;
-                default:
-                    throw new RuntimeException("The switch statement for data "
-                        + "structure operations in MusicGenerator.addLayers() "
-                        + "fell through");
-            }
+            MidiUtilities.copyEventsToTrack(operationTrack,
+                    sequence.getTracks()[channel], channel, measureNumber,
+                    ReferenceSequence);
         } else {
             ScopeNode currentScopeNode = (ScopeNode) currentNode;
 
-            switch(currentScopeNode.getType()) {
-                case FOR:
-                    System.out.println("For condition");
-                    break;
-                case WHILE:
-                    System.out.println("While condition");
-                    break;
-                case DOWHILE:
-                    System.out.println("Do/While condition");
-                    break;
-                case IF:
-                    System.out.println("If condition");
-                    break;
-                case ELSEIF:
-                    System.out.println("Else if condition");
-                    break;
-                case ELSE:
-                    System.out.println("Else condition");
-                    break;
-                case SWITCHBODY:
-                    System.out.println("Switch condition");
-                    break;
-                default:
-                    throw new RuntimeException("The switch statement for scope "
-                        + "conditions in MusicGenerator.addLayers() fell through");
+            Track conditionTrack =
+                    ScopeConditionMap.get(currentScopeNode.getType());
+            
+            // We want to make sure we have enough tracks,
+            // but only add tracks when we need more of them
+            if(channel >= numExistingTracks) {
+                sequence.createTrack();
             }
+            
+            MidiUtilities.copyEventsToTrack(conditionTrack,
+                    sequence.getTracks()[channel], channel, measureNumber,
+                    ReferenceSequence);
         }
     }
 }
