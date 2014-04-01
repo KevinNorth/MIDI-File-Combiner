@@ -263,9 +263,6 @@ public final class MusicGenerator {
      */
     private static void addLayers(List<ScopeNode> parentNodes, Node currentNode,
             Sequencer midi, int measureNumber) throws InvalidMidiDataException {
-        System.out.println("---------");
-        System.out.println("Measure " + measureNumber + ":");
-
         int channel = 0;
         int numExistingTracks = midi.getSequence().getTracks().length;
         Sequence sequence = midi.getSequence();
@@ -318,8 +315,6 @@ public final class MusicGenerator {
             if(currentDataStructureNode.getOperation() == Operation.NONE) {
                 return;
             }
-            
-            System.out.println("Outputting operation");
             
             channel++;
             Track operationTrack =
