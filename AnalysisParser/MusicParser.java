@@ -2,52 +2,33 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
-import java.util.regex.Pattern;
-
-import javax.lang.model.element.Element;
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.parsers.ParserConfigurationException;
-
-import org.w3c.dom.Node;
-import org.w3c.dom.NodeList;
 
 
+/**
+ * @author natasha-jahnke
+ *
+ * This class creates an abstract representation/execution path of a given source file.
+ * It uses the xml code coverage output of cobetura to determine if a line was executed
+ * and the number of times the line was executed.
+ */
 public class MusicParser {
 
 	public ExecutionPath path;
 	
-	//boolean dsFlag;
-	//int lineNumber;
-	
-//	public static void main(String[] args) {
-//		
-//		File coverage = new File("coverage.xml");
-//		File source1 = new File("source1.txt");
-//		File source2 = new File("source2.txt");
-//		File source3 = new File("source2.txt");
-//		
-//		path = parseFile(coverage,source1);
-//		
-//		
-////		int num = getLineNumberFromXML(9, coverage);
-////		
-////		System.out.println("Num: " + num);
-//	}
-	
+	/**
+	 * This method is used to parse the source file and using the coverage report build the
+	 * execution path representation of the source file.
+	 * @param xmlOutput
+	 * @param sourceFile
+	 * @return path - execution path
+	 */
 	public ExecutionPath parseFile(File xmlOutput, File sourceFile){
 		
 		path = new ExecutionPath();
 		
 		try (BufferedReader br = new BufferedReader(new FileReader(sourceFile)))
 		{
-			
-			
 			File coverage = new File("coverage.xml");
-			
-			
-			
-			
  
 			String sCurrentLine;
 			int lineNumber = 0;
@@ -60,15 +41,30 @@ public class MusicParser {
 				
 				tokens = sCurrentLine.split(" ");
 				
-				
 				String value = tokens[0];
 				DataStructureNode node;
 				ScopeNode scopeNode;
 				int numIterations = 1;
 				int nextLineIterations = 0;
 				
-				switch(value){
-					
+				if(value.contains("for"))
+					value = "for";
+				else if(value.contains("while"))
+					value = "while";
+				else if(value.contains("if"))
+					value = "if";
+				else if(value.contains("else if"))
+					value = "else if";
+				else if(value.contains("else"))
+					value = "else";
+				else if(value.contains("do"))
+					value = "do";
+				else if(value.contains("switch"))
+					value = "switch";
+				
+				//System.out.println(value);
+				
+				switch(value){				
 // DATASTRUCTURES
 					case "int":
 						node = new DataStructureNode(null, DataStructureNodeType.INT, checkOperation(sCurrentLine));
@@ -112,31 +108,24 @@ public class MusicParser {
 						scopeNode = new ScopeNode(null, numIterations);
 						scopeNode.setType(ScopeNodeType.WHILE);
 						
-						nextLineIterations = 0;
-						
-						if(numIterations <= 1 && nextLineIterations == 0){
-							path.addNode(scopeNode);
-							break;
-						}
-						
-						
-						dsFlag = true;
-						
-						while(dsFlag)
-						{
-							sCurrentLine = br.readLine();
-							lineNumber++;
+						if(checkBranchExecutions(lineNumber, coverage)){					
+							dsFlag = true;
 							
-							if(sCurrentLine.contains("}"))
+							while(dsFlag)
 							{
-								dsFlag = false;
-							}
-							else{
-								tokens = sCurrentLine.split(" ");
-								switchDataStructures(tokens, sCurrentLine, scopeNode);
+								sCurrentLine = br.readLine();
+								lineNumber++;
+								
+								if(sCurrentLine.contains("}"))
+								{
+									dsFlag = false;
+								}
+								else{
+									tokens = sCurrentLine.split(" ");
+									switchDataStructures(tokens, sCurrentLine, scopeNode);
+								}
 							}
 						}
-						
 						path.addNode(scopeNode);
 					break;
 					
@@ -144,6 +133,8 @@ public class MusicParser {
 						numIterations = getLineNumberFromXML(lineNumber, coverage);
 						scopeNode = new ScopeNode(null, numIterations);
 						scopeNode.setType(ScopeNodeType.DOWHILE);
+						
+						dsFlag = true;
 						
 						while(dsFlag)
 						{
@@ -160,18 +151,27 @@ public class MusicParser {
 								switchDataStructures(tokens, sCurrentLine, scopeNode);
 							}
 						}
-						
-						dsFlag = true;
 																		
 						path.addNode(scopeNode);		
 					break;
 					
 /*Switch*/			case "switch":
-						//TODO: logic to find number of iterations in XML file
-						//TODO: Handle anything inside of scope node
 						scopeNode = new ScopeNode(null, numIterations);
 						scopeNode.setType(ScopeNodeType.SWITCHBODY);
 						
+						dsFlag = true;
+						
+						while(dsFlag){
+							sCurrentLine = br.readLine();
+							lineNumber++;
+							
+							if(sCurrentLine.contains("}"))
+								dsFlag = false;
+							else if(getLineNumberFromXML(lineNumber, coverage) == 1){
+								tokens = sCurrentLine.split(" ");
+								switchDataStructures(tokens, sCurrentLine, scopeNode);
+							}
+						}
 						
 						path.addNode(scopeNode);
 						
@@ -181,57 +181,130 @@ public class MusicParser {
 						numIterations = getLineNumberFromXML(lineNumber, coverage);
 						scopeNode = new ScopeNode(null, numIterations);
 						scopeNode.setType(ScopeNodeType.FOR);
-						
-						nextLineIterations = 0;
-						
-						if(numIterations <= 1 && nextLineIterations == 0){
-							path.addNode(scopeNode);
-							break;
-						}
-						
-						
-						dsFlag = true;
-						
-						while(dsFlag)
-						{
-							sCurrentLine = br.readLine();
-							lineNumber++;
+												
+						if(checkBranchExecutions(lineNumber, coverage)){
+							dsFlag = true;
 							
-							if(sCurrentLine.contains("}"))
+							while(dsFlag)
 							{
-								dsFlag = false;
-							}
-							else{
-								tokens = sCurrentLine.split(" ");
-								switchDataStructures(tokens, sCurrentLine, scopeNode);
+								sCurrentLine = br.readLine();
+								lineNumber++;
+								
+								if(sCurrentLine.contains("}"))
+								{
+									dsFlag = false;
+								}
+								else{
+									tokens = sCurrentLine.split(" ");
+									switchDataStructures(tokens, sCurrentLine, scopeNode);
+								}
 							}
 						}
-
+						
+						path.addNode(scopeNode);
 						
 					break;
 					
 /*If Statement*/	case "if":
-						//TODO: logic to find number of iterations in XML file
-						//TODO: Handle anything inside of scope node
+						numIterations = getLineNumberFromXML(lineNumber, coverage);
 						scopeNode = new ScopeNode(null, numIterations);
-						scopeNode.setType(ScopeNodeType.FOR);
+						scopeNode.setType(ScopeNodeType.IF);
+												
+						if(checkBranchExecutions(lineNumber, coverage)){
+							dsFlag = true;
+							
+							while(dsFlag)
+							{
+								sCurrentLine = br.readLine();
+								lineNumber++;
+								
+								if(sCurrentLine.contains("}"))
+								{
+									dsFlag = false;
+								}
+								else{
+									tokens = sCurrentLine.split(" ");
+									switchDataStructures(tokens, sCurrentLine, scopeNode);
+								}
+							}
+						}
+						
+						path.addNode(scopeNode);
 						
 					break;
-				}
-				
+					
+					case "else if":
+						numIterations = getLineNumberFromXML(lineNumber, coverage);
+						scopeNode = new ScopeNode(null, numIterations);
+						scopeNode.setType(ScopeNodeType.ELSEIF);
+												
+						if(checkBranchExecutions(lineNumber, coverage)){
+							dsFlag = true;
+							
+							while(dsFlag)
+							{
+								sCurrentLine = br.readLine();
+								lineNumber++;
+								
+								if(sCurrentLine.contains("}"))
+								{
+									dsFlag = false;
+								}
+								else{
+									tokens = sCurrentLine.split(" ");
+									switchDataStructures(tokens, sCurrentLine, scopeNode);
+								}
+							}
+						}
+						
+						path.addNode(scopeNode);
+					break;
+					
+					case "else":
+						numIterations = getLineNumberFromXML(lineNumber, coverage);
+						scopeNode = new ScopeNode(null, numIterations);
+						scopeNode.setType(ScopeNodeType.ELSE);
+												
+						if(checkBranchExecutions(lineNumber, coverage)){
+							dsFlag = true;
+							
+							while(dsFlag)
+							{
+								sCurrentLine = br.readLine();
+								lineNumber++;
+								
+								if(sCurrentLine.contains("}"))
+								{
+									dsFlag = false;
+								}
+								else{
+									tokens = sCurrentLine.split(" ");
+									switchDataStructures(tokens, sCurrentLine, scopeNode);
+								}
+							}
+						}
+						
+						path.addNode(scopeNode);
+					break;
 
-//				System.out.println(sCurrentLine);
+				}
 			}
 			br.close();
 		} catch (IOException e) {
 			e.printStackTrace();
-		} 
-	
+		}
 		
 		return path;
-		
 	}
 
+	/**
+	 * This method is used when a scope node is executed and determines and builds the data structure
+	 * nodes contained within the scope node.
+	 * @param tokens
+	 * @param sCurrentLine
+	 * @param parent
+	 * @return dataStructureNode
+	 */
 	public DataStructureNode switchDataStructures(String[] tokens, String sCurrentLine, ScopeNode parent){
 		
 		String value = tokens[0];
@@ -278,7 +351,14 @@ public class MusicParser {
 
 	}
 	
+	/**
+	 * This method determines the operation completed on the line.  This method is only executed when 
+	 * a data structure node is executed. 
+	 * @param line
+	 * @return operation
+	 */
 	public Operation checkOperation(String line){
+		
 		if (line.contains("+"))
 			return Operation.ADD;
 		else if (line.contains("-"))
@@ -292,6 +372,12 @@ public class MusicParser {
 					
 	}
 	
+	/**
+	 * This method used the coverage report to find the number of times a line was executed.
+	 * @param lineNumber
+	 * @param coverage
+	 * @return numberOfTimes "lineNumber" was executed
+	 */
 	public static int getLineNumberFromXML(int lineNumber, File coverage){
 		int hitsNumber = -1;
 		try {
@@ -314,26 +400,6 @@ public class MusicParser {
 			
 			hitsNumber = Integer.parseInt(entries[2]);
 			
-			/*DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
-			DocumentBuilder dBuilder;
-			dBuilder = dbFactory.newDocumentBuilder();
-			
-			org.w3c.dom.Document doc = dBuilder.parse(coverage);
-			doc.getDocumentElement().normalize();
-			
-			NodeList nodes = doc.getElementsByTagName("lines");
-
-			for (int i = 0; i < nodes.getLength(); i++) {
-				Node node = nodes.item(i);
-				if (node.getNodeType() == Node.ELEMENT_NODE) {
-		
-					Element element = (Element) node;
-					System.out.println("Line Number: " + getValue("number", element));
-//					System.out.println("Stock Price: " + getValue("price", element));
-//					System.out.println("Stock Quantity: " + getValue("quantity", element));
-				}
-			}*/
-			
 			xmlReader.close();
 		} catch (Exception ex) {
 			ex.printStackTrace();
@@ -342,12 +408,41 @@ public class MusicParser {
 		return hitsNumber;
 	}
 	
-	/* Not being used.
-	private static String getValue(String tag, Element element) {
-		NodeList nodes = ((org.w3c.dom.Document) element).getElementsByTagName(tag).item(0).getChildNodes();
-		Node node = (Node) nodes.item(0);
-		return node.getNodeValue();
+	/**
+	 * This method uses the coverage report to check if a scope node's branch evaluates to true, if so the
+	 * the statements contained within may be executed.
+	 * @param lineNumber
+	 * @param coverage
+	 * @return boolean(true if branch was succesful, false otherwise)
+	 */
+	public static boolean checkBranchExecutions(int lineNumber, File coverage){
+		boolean branchExecution = false;
+		
+		try {
+			//Pattern lineHits = Pattern.compile("<line number=\"" + lineNumber + "\"");
+			BufferedReader xmlReader = new BufferedReader(new FileReader(coverage));
+			String xmlLine = xmlReader.readLine();
+			
+			String pattern = "<line number=\"" + lineNumber +"\"";
+			
+			while(!xmlLine.contains(pattern)){
+				xmlLine = xmlReader.readLine();
+			}
+			//Now xmlLine should have the correct line entry that we need to process
+			
+			if(xmlLine.contains("true"))
+				branchExecution = true;
+			
+			//System.out.println("lineNumber: " + lineNumber + "---branchExecution = " + branchExecution);
+			
+			xmlReader.close();
+		} catch (Exception ex) {
+			ex.printStackTrace();
+		}
+		
+		//System.out.println("lineNumber: " + lineNumber + "---branchExecution = " + branchExecution);
+		
+		return branchExecution;
 	}
-	*/
 	
 }
