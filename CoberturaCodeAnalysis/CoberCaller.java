@@ -1,39 +1,90 @@
+import java.io.File;
 import java.io.IOException;
 
 
 
 public class CoberCaller {
 
-	public static void Call(String fileIn) throws IOException{
+	public static void main(String[] args) {
+		
+		try {
+			Call(args[0]);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+	}
+	
+	public static void Call(String fileIn) throws IOException, InterruptedException{
 		
 		//Get the Runtime instance so the command line can be called
+		//This should work in the major OSs, and is confirmed to work in Windows
 		Runtime run = Runtime.getRuntime();
 		
-		//TODO: Need to copy the class file that we are running Music++ on to the bin folder
-		//Not sure of the most efficient way to do this
+		//Compile the .java file in the bin folder
+		//Currently the program accomplishes this by compiling in Java 1.6
+		run.exec("javac -target 1.6 -source 1.6 .\\bin\\" + fileIn + ".java");
 		
-		//TODO: Decide whether to use try/catch or to throw the IOExceptions upwards
+		//Wait until the class file is created
+		File classfile = new File("bin\\" + fileIn + ".class");
+		while (!classfile.exists()) {
+			Thread.sleep(500);
+		}
 		
-		//Run the command to instrument the class files found in .\bin
-		
+		//Run the command to instrument the class files found in .\bin and create cobertura.ser
+		//<Directory of Cobertura>\cobertura-instrument.bat --destination <Destination of the Instrumented Class> <Location of Class to Instrument>
+		//Instrumenting the classes formats them so that cobertura can properly collect data
 		run.exec("..\\cobertura-1.9.4.1\\cobertura-instrument.bat --destination .\\instrument_bin .\\bin");
 		
+		//Wait until the instrumented file and data file are created
+		File instrfile = new File("instrument_bin\\" + fileIn + ".class");
+		File datafile = new File(".\\cobertura.ser");
+		while (!instrfile.exists() || !datafile.exists()) {
+			Thread.sleep(500);
+		}
 		
-		//Back up the datafile
+		//Back up the data file
 		//Note from Zhen:  if you don't backup, it will write to the datafile, and the code coverage would accumulate
-		run.exec("mkdir backup");
 		run.exec("xcopy /y cobertura.ser .\\backup");
+		
+		//Wait until the data file is backed up
+		File bkpfile = new File(".\\backup\\cobertura.ser");
+		while (!bkpfile.exists()) {
+			Thread.sleep(500);
+		}
 		
 		//Copy back the empty datafile
 		run.exec("xcopy /y .\\backup\\cobertura.ser .");
 		
+		//Give the system time to copy the file back
+		Thread.sleep(700);
+		
 		//Run the tool and write to the datafile
 		run.exec("java -cp ..\\cobertura-1.9.4.1\\cobertura.jar;.\\instrument_bin;.\\bin;.\\bin " + 
-								fileIn + "-Dnet.sourceforge.cobertura.datafile=.\\cobertura.ser ");
+								fileIn + " -Dnet.sourceforge.cobertura.datafile=.\\cobertura.ser ");
+		
+		//TODO:  Enhance this wait condition to allow for longer-running programs
+		//Wait for the system to complete data collection
+		Thread.sleep(1000);
 		
 		//Generate the report
-		run.exec("..\\cobertura-1.9.4.1\\cobertura-report.bat --format xml --datafile .\\cobertura.ser --destination . ");
+		run.exec("..\\cobertura-1.9.4.1\\cobertura-report.bat --format xml --datafile .\\cobertura.ser --destination .\\report ");
 		
+		//Wait until the report is generated
+		File rptfile = new File(".\\report\\coverage.xml");
+		while (!rptfile.exists()) {
+			Thread.sleep(500);
+		}
+		
+		//Scrub the intermediate files produced so that only the report is left
+		classfile.delete();
+		instrfile.delete();
+		datafile.delete();
+		bkpfile.delete();
 
 	}//End Call
 
