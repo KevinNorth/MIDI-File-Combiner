@@ -1,5 +1,6 @@
 package musicplusplusinterfaces.lists;
 
+
 import java.util.LinkedList;
 import java.util.List;
 

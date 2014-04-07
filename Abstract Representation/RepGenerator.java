@@ -1,3 +1,5 @@
+package musicplusplusinterfaces.lists;
+
 /**
  * RepGenerator
  * This class generates some examples of an abstract representation of code.

@@ -1,10 +1,13 @@
 package musicplusplusinterfaces.lists;
 
+
 import java.util.LinkedList;
 import java.util.List;
 
+
 public class ScopeNode extends Node {
-    private List<Node> children;
+   
+	private List<Node> children;
     private int numIterations;
     private ScopeNodeType type;
     
@@ -42,4 +45,11 @@ public class ScopeNode extends Node {
         return type == ScopeNodeType.FOR
                 || type == ScopeNodeType.WHILE;
     }
+    
+    @Override
+   	public String toString() {
+   		return "ScopeNode [children=" + children + ", numIterations="
+   				+ numIterations + ", type=" + type + "]";
+   	}
+    
 }
