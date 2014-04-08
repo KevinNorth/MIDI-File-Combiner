@@ -26,4 +26,11 @@ public class DataStructureNode extends Node {
     public void setOperation(Operation operation) {
         this.operation = operation;
     }
+
+	@Override
+	public String toString() {
+		return "DataStructureNode [type=" + type + ", operation=" + operation
+				+ "]";
+	}    
+    
 }

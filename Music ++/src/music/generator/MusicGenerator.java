@@ -81,6 +81,7 @@ public final class MusicGenerator {
             Sequence elseSequence = MidiUtilities.openMidiFile("midi/scope_bodies/else.mid");
             Sequence ifSequence = MidiUtilities.openMidiFile("midi/scope_bodies/if.mid");
             Sequence forSequence = MidiUtilities.openMidiFile("midi/scope_bodies/for.mid");
+            Sequence switchSequence = MidiUtilities.openMidiFile("midi/scope_bodies/switch.mid");
             Sequence whileSequence = MidiUtilities.openMidiFile("midi/scope_bodies/while.mid");
             
             Track doWhileTrack = doWhileSequence.getTracks()[0];
@@ -88,6 +89,7 @@ public final class MusicGenerator {
             Track elseTrack = elseSequence.getTracks()[0];
             Track ifTrack = ifSequence.getTracks()[0];
             Track forTrack = forSequence.getTracks()[0];
+            Track switchTrack = switchSequence.getTracks()[0];
             Track whileTrack = whileSequence.getTracks()[0];
             
             ScopeBodyMap.put(ScopeNodeType.DOWHILE, doWhileTrack);
@@ -95,6 +97,7 @@ public final class MusicGenerator {
             ScopeBodyMap.put(ScopeNodeType.ELSE, elseTrack);
             ScopeBodyMap.put(ScopeNodeType.IF, ifTrack);
             ScopeBodyMap.put(ScopeNodeType.FOR, forTrack);
+            ScopeBodyMap.put(ScopeNodeType.SWITCHBODY, switchTrack);
             ScopeBodyMap.put(ScopeNodeType.WHILE, whileTrack);
         }
 
@@ -105,18 +108,21 @@ public final class MusicGenerator {
             Sequence whileSequence = MidiUtilities.openMidiFile("midi/scope_conditions/while.mid");
             Sequence ifSequence = MidiUtilities.openMidiFile("midi/scope_conditions/if.mid");
             Sequence elseIfSequence = MidiUtilities.openMidiFile("midi/scope_conditions/else_if.mid");
+            Sequence switchSequence = MidiUtilities.openMidiFile("midi/scope_conditions/switch.mid");
             Sequence doWhileSequence = MidiUtilities.openMidiFile("midi/scope_conditions/do_while.mid");
             
             Track doWhileTrack = doWhileSequence.getTracks()[0];
             Track elseIfTrack = elseIfSequence.getTracks()[0];
             Track ifTrack = ifSequence.getTracks()[0];
             Track forTrack = forSequence.getTracks()[0];
+            Track switchTrack = switchSequence.getTracks()[0];
             Track whileTrack = whileSequence.getTracks()[0];
             
             ScopeConditionMap.put(ScopeNodeType.DOWHILE, doWhileTrack);
             ScopeConditionMap.put(ScopeNodeType.ELSEIF, elseIfTrack);
             ScopeConditionMap.put(ScopeNodeType.IF, ifTrack);
             ScopeConditionMap.put(ScopeNodeType.FOR, forTrack);
+            ScopeConditionMap.put(ScopeNodeType.SWITCHBODY, switchTrack);
             ScopeConditionMap.put(ScopeNodeType.WHILE, whileTrack);
         }
 

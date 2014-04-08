@@ -3,8 +3,10 @@ package code.representation;
 import java.util.LinkedList;
 import java.util.List;
 
+
 public class ScopeNode extends Node {
-    private List<Node> children;
+   
+	private List<Node> children;
     private int numIterations;
     private ScopeNodeType type;
     
@@ -48,6 +50,13 @@ public class ScopeNode extends Node {
         return type == ScopeNodeType.ELSEIF
                 || type == ScopeNodeType.IF
                 || type == ScopeNodeType.FOR
+                || type == ScopeNodeType.SWITCHBODY
                 || type == ScopeNodeType.WHILE;
+     }
+    
+    @Override
+    public String toString() {
+            return "ScopeNode [children=" + children + ", numIterations="
+                            + numIterations + ", type=" + type + "]";
     }
 }
