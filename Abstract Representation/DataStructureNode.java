@@ -27,6 +27,14 @@ public class DataStructureNode extends Node {
         this.operation = operation;
     }
 
+    public final boolean equals(Object o) {
+		if(o instanceof DataStructureNode){
+			return o.hashCode() == this.hashCode();
+		}else{
+			return false;
+		}
+	}
+    
 	@Override
 	public String toString() {
 		return "DataStructureNode [type=" + type + ", operation=" + operation

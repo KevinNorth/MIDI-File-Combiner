@@ -19,4 +19,12 @@ public class ExecutionPath {
     {
         return nodes;
     }
+    
+    public final boolean equals(Object o) {
+		if(o instanceof ExecutionPath){
+			return ((ExecutionPath) o).nodes.equals(this.nodes);
+		}else{
+			return false;
+		}
+	}
 }

@@ -43,9 +43,24 @@ public class ScopeNode extends Node {
     
     public boolean playComparisonAtEnd() {
         return type == ScopeNodeType.FOR
-                || type == ScopeNodeType.WHILE
-                || type == ScopeNodeType.DOWHILE;
+                || type == ScopeNodeType.WHILE;
     }
+    
+    public final boolean equals(Object o) {
+		if(o instanceof ScopeNode){
+			return ((ScopeNode) o).children.equals(this.children) &&
+					((ScopeNode) o).type.equals(this.type) &&
+					((ScopeNode) o).numIterations == this.numIterations;
+		}else{
+			return false;
+		}
+	}
+    
+    @Override
+   	public String toString() {
+   		return "ScopeNode [children=" + children + ", numIterations="
+   				+ numIterations + ", type=" + type + "]";
+   	}
     
     public boolean playComparisonAtBeginning() {
         return type == ScopeNodeType.ELSEIF
@@ -54,11 +69,5 @@ public class ScopeNode extends Node {
                 || type == ScopeNodeType.SWITCHBODY
                 || type == ScopeNodeType.WHILE;
      }
- 
-    @Override
-   	public String toString() {
-   		return "ScopeNode [children=" + children + ", numIterations="
-   				+ numIterations + ", type=" + type + "]";
-   	}
     
 }
