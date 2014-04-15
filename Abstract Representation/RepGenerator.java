@@ -48,6 +48,10 @@ public class RepGenerator {
 		DataStructureNode d1 = new DataStructureNode(null, DataStructureNodeType.INT, Operation.NONE);
 		path.addNode(d1);
 		
+		ScopeNode s2 = new ScopeNode(null,1);
+		s2.setType(ScopeNodeType.IF);
+		path.addNode(s2);
+		
 		ScopeNode s1 = new ScopeNode(null, 1);
 		s1.setType(ScopeNodeType.ELSEIF);		
 			DataStructureNode s1d1 = new DataStructureNode(s1, DataStructureNodeType.INT, Operation.ADD);	
@@ -73,6 +77,14 @@ public class RepGenerator {
 		DataStructureNode d1 = new DataStructureNode(null, DataStructureNodeType.INT, Operation.NONE);
 		path.addNode(d1);
 		
+		ScopeNode s2 = new ScopeNode(null,1);
+		s2.setType(ScopeNodeType.IF);
+		path.addNode(s2);
+		
+		ScopeNode s3 = new ScopeNode(null,1);
+		s3.setType(ScopeNodeType.ELSEIF);
+		path.addNode(s3);
+		
 		ScopeNode s1 = new ScopeNode(null, 1);
 		s1.setType(ScopeNodeType.ELSE);		
 			DataStructureNode s1d1 = new DataStructureNode(s1, DataStructureNodeType.INT, Operation.ADD);	
@@ -95,6 +107,14 @@ public class RepGenerator {
 		
 		DataStructureNode d1 = new DataStructureNode(null, DataStructureNodeType.INT, Operation.NONE);
 		path.addNode(d1);	
+		
+		ScopeNode s2 = new ScopeNode(null,1);
+		s2.setType(ScopeNodeType.IF);
+		path.addNode(s2);
+		
+		ScopeNode s3 = new ScopeNode(null,1);
+		s3.setType(ScopeNodeType.ELSEIF);
+		path.addNode(s3);
 		
 		return path;
 	}
@@ -285,8 +305,7 @@ public class RepGenerator {
 		
 		return path;
 	}
-	
-	
+		
 	public ExecutionPath noWhile(){
 		/*	int i = 0;
 			int x = 20;
@@ -311,8 +330,7 @@ public class RepGenerator {
 		
 		return path;
 	}
-	
-	
+		
 	public ExecutionPath doWhileDivision(){
 		/*	int i = 0;
 			float x = 32;
@@ -339,8 +357,7 @@ public class RepGenerator {
 		
 		return path;
 	}
-	
-	
+		
 	public ExecutionPath doWhileMultiplication(){
 		/*	int i = 0;
 			byte x = 1;
@@ -413,7 +430,7 @@ public class RepGenerator {
 		
 		ScopeNode s1 = new ScopeNode(null, 1);
 		s1.setType(ScopeNodeType.DOWHILE);	
-			DataStructureNode s1d1 = new DataStructureNode(s1, DataStructureNodeType.INT, Operation.ADD);
+			DataStructureNode s1d1 = new DataStructureNode(s1, DataStructureNodeType.INT, Operation.SUBTRACT);
 			DataStructureNode s1d2 = new DataStructureNode(s1, DataStructureNodeType.INT, Operation.ADD);	
 		s1.addChild(s1d1);
 		s1.addChild(s1d2);
