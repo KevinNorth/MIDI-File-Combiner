@@ -12,6 +12,8 @@ import java.util.EnumMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.sound.midi.InvalidMidiDataException;
 import javax.sound.midi.MidiUnavailableException;
 import javax.sound.midi.Sequence;
@@ -155,8 +157,17 @@ public final class MusicGenerator {
      * file based on it.
      * 
      * @param rootNode The root of the abstract representation tree.
-     * @param shouldSaveMidiFile <code>true</code> if the MIDI file should be
-     *      saved after it's generated
+     * @param filePath The path to where the MIDI file should be saved. Relative
+     *      paths are relative to the program directory. If <code>null</code>,
+     *      the MIDI file isn't saved.
+     * @param shouldPlayMidiFile If <code>true</code>, this function will play
+     *      the MIDI file before returning. <b>This means that the function may
+     *      take several minutes (or much longer) to return, depending on how
+     *      large the input abstract representation is!</b>
+     *      </p>
+     *      If you need the function to return before the MIDI file has
+     *      completely finished playing, you can interrupt the thread that this
+     *      function was called on, and the MIDI file will stop playing.
      * @return A <code>Sequence</code> that plays the music demonstrating the
      *      execution path represented by <code>rootNode</code>
      * @throws IOException If there was a problem opening or saving any MIDI
@@ -167,7 +178,7 @@ public final class MusicGenerator {
      *      information
      */
     public static Sequencer startParseNodes(ExecutionPath rootNode,
-            boolean shouldSaveMidiFile) throws IOException,
+            String filePath, boolean shouldPlayMidiFile) throws IOException,
             InvalidMidiDataException,
             MidiUnavailableException {
         initMaps();
@@ -183,8 +194,33 @@ public final class MusicGenerator {
                     measureNumber);
         }
 
-        if(shouldSaveMidiFile) {
-            MidiUtilities.saveMidiFile(midi.getSequence(), "out.mid");
+        if(filePath != null) {
+            MidiUtilities.saveMidiFile(midi.getSequence(), filePath);
+        }
+        
+        if(shouldPlayMidiFile) {
+            midi.open();
+            midi.start();
+            
+            // busy-wait until the sequencer stops playing
+            // from http://web.mit.edu/6.005/www/fa08/projects/abcPlayer/src/sound/SequencePlayer.java
+            while (midi.isRunning()){
+                try
+                {
+                    Thread.sleep(500L);
+                } catch (InterruptedException ex)
+                {
+                    // When interrupted, stop playing the MIDI file and
+                    // return from the function quickly
+                    break;
+                }
+            }
+            
+            if(midi.isRunning()) {
+                midi.stop();
+            }
+            
+            midi.close();
         }
         
         return midi;
