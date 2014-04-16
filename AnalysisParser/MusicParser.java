@@ -44,6 +44,7 @@ public class MusicParser {
 				tokens = sCurrentLine.split(" ");
 				
 				String value = tokens[0];
+				value = value.replace("\t", "");
 				DataStructureNode node;
 				ScopeNode scopeNode;
 				int numIterations = 1;
@@ -99,7 +100,7 @@ public class MusicParser {
 				}
 				else
 				{					
-					if(value.contains("=") && !value.isEmpty())
+					if(sCurrentLine.contains("=") && !value.isEmpty())
 					{
 						value = variables.get(tokens[0].trim());
 					}
