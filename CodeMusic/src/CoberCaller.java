@@ -33,25 +33,6 @@ public class CoberCaller {
 			Thread.sleep(500);
 		}
 		
-//		//Back up the data file
-//		//Note from Zhen:  if you don't backup, it will write to the datafile, and the code coverage would accumulate
-//		run.exec("xcopy /y cobertura.ser ./backup/");
-//		
-//		//Wait until the data file is backed up
-//		File bkpfile = new File("./backup/cobertura.ser");
-//		while (!bkpfile.exists()) {
-//			System.out.println("Wait");
-//			Thread.sleep(500);
-//		}
-//		
-//		//Copy back the empty datafile
-//		run.exec("xcopy /y ./backup/cobertura.ser .");
-//		
-//		//Give the system time to copy the file back
-//		Thread.sleep(700);
-//		NOTE:  The backup file here may not be necessary since the CoberCaller clears out all of the 
-//		files it creates
-		
 		//Run the tool and write to the datafile
 		run.exec("java -cp ./cobertura-1.9.4.1/cobertura.jar;./instrument_bin;./cobertura_bin;./cobertura_bin " + 
 								fileIn + " -Dnet.sourceforge.cobertura.datafile=./cobertura.ser ");
@@ -73,7 +54,6 @@ public class CoberCaller {
 		classfile.delete();
 		instrfile.delete();
 		datafile.delete();
-//		bkpfile.delete();
 
 	}//End Call
 

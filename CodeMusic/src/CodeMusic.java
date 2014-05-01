@@ -13,13 +13,13 @@ public class CodeMusic {
 			CoberCaller.Call(args[0]);
 			
 			MusicParser parser = new MusicParser();
-			File src = new File(".\\cobertura_bin\\" + args[0] + ".java");
-			File cvg = new File(".\\report\\coverage.xml");
+			File src = new File("./cobertura_bin/" + args[0] + ".java");
+			File cvg = new File("./report/coverage.xml");
 			while (!cvg.exists()) {
 				Thread.sleep(500);
 			}
 			ExecutionPath path = parser.parseFile(cvg, src);
-			//RepGenerator rp = new RepGenerator();
+			//The following print line is for testing/debugging use
 			//System.out.println(path.getNodes().toString());
 			cvg.delete();
 			
