@@ -42,3 +42,17 @@ To run the program from the windows cmd box, use the following command:
 `file-name` should be the name of a java program in the `cobertura_bin` directory.  It should be a correct java program — CodeMusic has no checks for input program correctness.  The argument does not need the .java file extension, only the file name.
 
 To run the program from Eclipse, be sure the run configuration has `file-name` as its argument.  The source code in eclipse will compile the .class files into a directory called bin, rather than the root CodeMusic directory.  Otherwise, the directory structure is the same.
+
+# CodeMusic Directory Structure
+
+    Directory . . . . . . . Contains
+    /CodeMusic
+     	/bin			       		      Class files
+     	/cobertura_bin			     Input java files
+     	/cobertura-1.9.4.1  		Cobertura tool
+     	/INSTRUCTIONS		      	Information on how to run Music++
+     	/instrument_bin			    Intermediate cobertura files
+     	/midi				            	Midi clips
+	     /report					          Intermediate cobertura files
+	     /src				             	Music++ system source code
+     	*.class					          Class files
