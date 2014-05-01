@@ -47,12 +47,12 @@ To run the program from Eclipse, be sure the run configuration has `file-name` a
 
     Directory . . . . . . . Contains
     /CodeMusic
-     	/bin			       		      Class files
-     	/cobertura_bin			     Input java files
-     	/cobertura-1.9.4.1  		Cobertura tool
-     	/INSTRUCTIONS		      	Information on how to run Music++
-     	/instrument_bin			    Intermediate cobertura files
-     	/midi				            	Midi clips
-	     /report					          Intermediate cobertura files
-	     /src				             	Music++ system source code
-     	*.class					          Class files
+     	/bin                Class files
+     	/cobertura_bin      Input java files
+     	/cobertura-1.9.4.1  Cobertura tool
+     	/INSTRUCTIONS       Information on how to run Music++
+     	/instrument_bin     Intermediate cobertura files
+     	/midi               Midi clips
+     	/report             Intermediate cobertura files
+        /src                Music++ system source code
+        *.class             Class files
