@@ -1,6 +1,6 @@
 public class NoStructure {
 	public static void main(String[] args) {
-		double x = 1;
+		int x = 1;
 		x = x + 0;
 		x = x + 1;
 		x = x + 2;

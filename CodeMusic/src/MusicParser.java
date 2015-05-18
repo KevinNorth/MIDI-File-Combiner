@@ -109,66 +109,38 @@ public class MusicParser {
 				switch(value){				
 // DATASTRUCTURES
 					case "int":
-					if (getNumberOfIterations(lineNumber, coverage) != 0) {
-						node = new DataStructureNode(null,
-								DataStructureNodeType.INT,
-								checkOperation(sCurrentLine));
+						node = new DataStructureNode(null, DataStructureNodeType.INT, checkOperation(sCurrentLine));
 						path.addNode(node);
-					}
 					break;
 					
 					case "double":
-					if (getNumberOfIterations(lineNumber, coverage) != 0) {
-						node = new DataStructureNode(null,
-								DataStructureNodeType.DOUBLE,
-								checkOperation(sCurrentLine));
+						node = new DataStructureNode(null, DataStructureNodeType.DOUBLE, checkOperation(sCurrentLine));
 						path.addNode(node);
-					}
 					break;
 					
 					case "float":
-					if (getNumberOfIterations(lineNumber, coverage) != 0) {
-						node = new DataStructureNode(null,
-								DataStructureNodeType.FLOAT,
-								checkOperation(sCurrentLine));
+						node = new DataStructureNode(null, DataStructureNodeType.FLOAT, checkOperation(sCurrentLine));
 						path.addNode(node);
-					}
 					break;
 					
 					case "String":
-					if (getNumberOfIterations(lineNumber, coverage) != 0) {
-						node = new DataStructureNode(null,
-								DataStructureNodeType.STRING,
-								checkOperation(sCurrentLine));
+						node = new DataStructureNode(null, DataStructureNodeType.STRING, checkOperation(sCurrentLine));
 						path.addNode(node);
-					}
 					break;
 					
 					case "char":
-					if (getNumberOfIterations(lineNumber, coverage) != 0) {
-						node = new DataStructureNode(null,
-								DataStructureNodeType.CHAR,
-								checkOperation(sCurrentLine));
+						node = new DataStructureNode(null, DataStructureNodeType.CHAR, checkOperation(sCurrentLine));
 						path.addNode(node);
-					}
 					break;
 					
 					case "byte":
-					if (getNumberOfIterations(lineNumber, coverage) != 0) {
-						node = new DataStructureNode(null,
-								DataStructureNodeType.BYTE,
-								checkOperation(sCurrentLine));
+						node = new DataStructureNode(null, DataStructureNodeType.BYTE, checkOperation(sCurrentLine));
 						path.addNode(node);
-					}
 					break;
 					
 					case "boolean":
-					if (getNumberOfIterations(lineNumber, coverage) != 0) {
-						node = new DataStructureNode(null,
-								DataStructureNodeType.BOOLEAN,
-								checkOperation(sCurrentLine));
+						node = new DataStructureNode(null, DataStructureNodeType.BOOLEAN, checkOperation(sCurrentLine));
 						path.addNode(node);
-					}
 					break;
 					
 // LOGIC CONSTRUCTORS

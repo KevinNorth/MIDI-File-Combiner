@@ -10,16 +10,18 @@ public class CodeMusic {
 	public static void main(String[] args){
 		
 		try {
-			CoberCaller.Call(args[0]);
+			boolean success = CoberCaller.Call(args[0]);
+			if(!success) {
+				return;
+			}
 			
 			MusicParser parser = new MusicParser();
-			File src = new File("./cobertura_bin/" + args[0] + ".java");
-			File cvg = new File("./report/coverage.xml");
+			File src = new File(".\\cobertura_bin\\" + args[0] + ".java");
+			File cvg = new File(".\\report\\coverage.xml");
 			while (!cvg.exists()) {
 				Thread.sleep(500);
 			}
 			ExecutionPath path = parser.parseFile(cvg, src);
-			//The following print line is for testing/debugging use
 			//System.out.println(path.getNodes().toString());
 			cvg.delete();
 			
