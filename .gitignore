@@ -13,3 +13,6 @@ loopless_demo.mid
 /Music ++/dist/
 
 CodeMusic/bin/
+/CodeMusic/nbproject/private/
+/CodeMusic/build/
+/CodeMusic/dist/
