@@ -1,0 +1,6 @@
+report
+
+The cobertura code coverage tool places the coverage report
+file in this directory.  The file is cleared out after the 
+program is finished using it.  No other files need to be placed
+in this folder.
