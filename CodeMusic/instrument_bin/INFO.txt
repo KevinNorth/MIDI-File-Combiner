@@ -1,5 +1,0 @@
-instrument_bin
-
-This folder is a placeholder for use by the cobertura code coverage tool.
-Cobertura places intermediate files in the folder to run correctly.  No
-files need to be placed in this folder by the user.

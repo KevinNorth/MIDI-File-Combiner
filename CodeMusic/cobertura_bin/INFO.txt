@@ -1,4 +1,0 @@
-cobertura_bin
-
-This folder should contain the .java files to be run through the Music++ system.
-The programs should be correct and compile properly.
