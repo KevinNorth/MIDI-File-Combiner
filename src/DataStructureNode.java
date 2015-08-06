@@ -1,16 +1,22 @@
 public class DataStructureNode extends Node {
     private DataStructureNodeType type;
     private Operation operation;
+    private int lineNumber;
 
     public DataStructureNode(ScopeNode parent, DataStructureNodeType type,
-            Operation operation) {
+            Operation operation, int lineNumber) {
         super(parent);
         this.type = type;
         this.operation = operation;
+        this.lineNumber = lineNumber;
     }
 
     public DataStructureNodeType getType() {
         return type;
+    }
+    
+    public int getLineNumber(){
+    	return lineNumber;
     }
 
     public void setType(DataStructureNodeType type) {

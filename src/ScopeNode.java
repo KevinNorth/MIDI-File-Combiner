@@ -7,11 +7,17 @@ public class ScopeNode extends Node {
 	private List<Node> children;
     private int numIterations;
     private ScopeNodeType type;
+    private int lineNumber;
     
-    public ScopeNode(ScopeNode parent, int numIterations) {
+    public ScopeNode(ScopeNode parent, int numIterations, int lineNumber) {
         super(parent);
         this.numIterations = numIterations;
         children = new LinkedList<Node>();
+        this.lineNumber = lineNumber;
+    }
+
+    public int getLineNumber(){
+    	return lineNumber;
     }
 
     public int getNumIterations() {

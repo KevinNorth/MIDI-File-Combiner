@@ -109,37 +109,37 @@ public class MusicParser {
 				switch(value){				
 // DATASTRUCTURES
 					case "int":
-						node = new DataStructureNode(null, DataStructureNodeType.INT, checkOperation(sCurrentLine));
+						node = new DataStructureNode(null, DataStructureNodeType.INT, checkOperation(sCurrentLine), lineNumber);
 						path.addNode(node);
 					break;
 					
 					case "double":
-						node = new DataStructureNode(null, DataStructureNodeType.DOUBLE, checkOperation(sCurrentLine));
+						node = new DataStructureNode(null, DataStructureNodeType.DOUBLE, checkOperation(sCurrentLine), lineNumber);
 						path.addNode(node);
 					break;
 					
 					case "float":
-						node = new DataStructureNode(null, DataStructureNodeType.FLOAT, checkOperation(sCurrentLine));
+						node = new DataStructureNode(null, DataStructureNodeType.FLOAT, checkOperation(sCurrentLine), lineNumber);
 						path.addNode(node);
 					break;
 					
 					case "String":
-						node = new DataStructureNode(null, DataStructureNodeType.STRING, checkOperation(sCurrentLine));
+						node = new DataStructureNode(null, DataStructureNodeType.STRING, checkOperation(sCurrentLine), lineNumber);
 						path.addNode(node);
 					break;
 					
 					case "char":
-						node = new DataStructureNode(null, DataStructureNodeType.CHAR, checkOperation(sCurrentLine));
+						node = new DataStructureNode(null, DataStructureNodeType.CHAR, checkOperation(sCurrentLine), lineNumber);
 						path.addNode(node);
 					break;
 					
 					case "byte":
-						node = new DataStructureNode(null, DataStructureNodeType.BYTE, checkOperation(sCurrentLine));
+						node = new DataStructureNode(null, DataStructureNodeType.BYTE, checkOperation(sCurrentLine), lineNumber);
 						path.addNode(node);
 					break;
 					
 					case "boolean":
-						node = new DataStructureNode(null, DataStructureNodeType.BOOLEAN, checkOperation(sCurrentLine));
+						node = new DataStructureNode(null, DataStructureNodeType.BOOLEAN, checkOperation(sCurrentLine), lineNumber);
 						path.addNode(node);
 					break;
 					
@@ -147,7 +147,7 @@ public class MusicParser {
 					
 /*WHILE*/			case "while":
 						numIterations = getNumberOfIterations(lineNumber, coverage) - 1;
-						scopeNode = new ScopeNode(null, numIterations);
+						scopeNode = new ScopeNode(null, numIterations, lineNumber);
 						scopeNode.setType(ScopeNodeType.WHILE);
 						
 						if(getNumberOfIterations(lineNumber + 1, coverage) > 0){					
@@ -161,7 +161,7 @@ public class MusicParser {
 								if(sCurrentLine.contains("}"))
 									dsFlag = false;
 								
-								DataStructureNode childNode = switchDataStructures(sCurrentLine, scopeNode);
+								DataStructureNode childNode = switchDataStructures(sCurrentLine, scopeNode, lineNumber);
 								if(childNode != null)
 									scopeNode.addChild(childNode);
 							}
@@ -171,7 +171,7 @@ public class MusicParser {
 					
 /*Do-While*/		case "do":
 						numIterations = getNumberOfIterations(lineNumber + 1, coverage);
-						scopeNode = new ScopeNode(null, numIterations);
+						scopeNode = new ScopeNode(null, numIterations, lineNumber);
 						scopeNode.setType(ScopeNodeType.DOWHILE);
 						
 						dsFlag = true;
@@ -188,7 +188,7 @@ public class MusicParser {
 							}
 							else{
 								
-								DataStructureNode childNode = switchDataStructures(sCurrentLine, scopeNode);
+								DataStructureNode childNode = switchDataStructures(sCurrentLine, scopeNode, lineNumber);
 								if(childNode != null)
 									scopeNode.addChild(childNode);
 							}
@@ -198,7 +198,7 @@ public class MusicParser {
 					break;
 					
 /*Switch*/			case "switch":
-						scopeNode = new ScopeNode(null, numIterations);
+						scopeNode = new ScopeNode(null, numIterations, lineNumber);
 						scopeNode.setType(ScopeNodeType.SWITCHBODY);
 						
 						dsFlag = true;
@@ -211,7 +211,7 @@ public class MusicParser {
 								dsFlag = false;
 							else if(getNumberOfIterations(lineNumber, coverage) == 1){
 								
-								DataStructureNode childNode = switchDataStructures(sCurrentLine, scopeNode);
+								DataStructureNode childNode = switchDataStructures(sCurrentLine, scopeNode, lineNumber);
 								if(childNode != null)
 									scopeNode.addChild(childNode);
 							}
@@ -223,7 +223,7 @@ public class MusicParser {
 					
 /*For*/				case "for":
 						numIterations = getNumberOfIterations(lineNumber, coverage) - 1;
-						scopeNode = new ScopeNode(null, numIterations);
+						scopeNode = new ScopeNode(null, numIterations, lineNumber);
 						scopeNode.setType(ScopeNodeType.FOR);
 												
 						if(getNumberOfIterations(lineNumber + 1, coverage) > 0){
@@ -240,7 +240,7 @@ public class MusicParser {
 								}
 								else{
 									
-									DataStructureNode childNode = switchDataStructures(sCurrentLine, scopeNode);
+									DataStructureNode childNode = switchDataStructures(sCurrentLine, scopeNode, lineNumber);
 									if(childNode != null)
 										scopeNode.addChild(childNode);
 								}
@@ -254,7 +254,7 @@ public class MusicParser {
 /*If Statement*/	case "if":
 						if(getNumberOfIterations(lineNumber, coverage) > 0){
 							numIterations = getNumberOfIterations(lineNumber, coverage);
-							scopeNode = new ScopeNode(null, numIterations);
+							scopeNode = new ScopeNode(null, numIterations, lineNumber);
 							scopeNode.setType(ScopeNodeType.IF);
 						
 							dsFlag = true;
@@ -272,7 +272,7 @@ public class MusicParser {
 									}
 									
 									if(getNumberOfIterations(lineNumber, coverage) > 0){
-										DataStructureNode childNode = switchDataStructures(sCurrentLine, scopeNode);
+										DataStructureNode childNode = switchDataStructures(sCurrentLine, scopeNode, lineNumber);
 										if(childNode != null)
 											scopeNode.addChild(childNode);
 									}
@@ -286,7 +286,7 @@ public class MusicParser {
 					case "else if":
 						if(getNumberOfIterations(lineNumber, coverage) > 0){
 							numIterations = getNumberOfIterations(lineNumber, coverage);
-							scopeNode = new ScopeNode(null, numIterations);
+							scopeNode = new ScopeNode(null, numIterations, lineNumber);
 							scopeNode.setType(ScopeNodeType.ELSEIF);
 												
 							dsFlag = true;
@@ -303,7 +303,7 @@ public class MusicParser {
 									}
 									
 									if(getNumberOfIterations(lineNumber, coverage) > 0){
-										DataStructureNode childNode = switchDataStructures(sCurrentLine, scopeNode);
+										DataStructureNode childNode = switchDataStructures(sCurrentLine, scopeNode, lineNumber);
 										if(childNode != null)
 											scopeNode.addChild(childNode);
 									}
@@ -318,7 +318,7 @@ public class MusicParser {
 					case "else":
 						if(getNumberOfIterations(lineNumber+1, coverage) > 0){
 							numIterations = getNumberOfIterations(lineNumber+1, coverage);
-							scopeNode = new ScopeNode(null, numIterations);
+							scopeNode = new ScopeNode(null, numIterations, lineNumber);
 							scopeNode.setType(ScopeNodeType.ELSE);
 														
 							dsFlag = true;
@@ -334,7 +334,7 @@ public class MusicParser {
 									}
 									
 									if(getNumberOfIterations(lineNumber, coverage) > 0) {
-										DataStructureNode childNode = switchDataStructures(sCurrentLine, scopeNode);
+										DataStructureNode childNode = switchDataStructures(sCurrentLine, scopeNode, lineNumber);
 										if(childNode != null)
 											scopeNode.addChild(childNode);
 									}
@@ -362,7 +362,7 @@ public class MusicParser {
 	 * @param parent
 	 * @return dataStructureNode
 	 */
-	public DataStructureNode switchDataStructures(String sCurrentLine, ScopeNode parent){
+	public DataStructureNode switchDataStructures(String sCurrentLine, ScopeNode parent, int lineNumber){
 		String[] tokens = new String[15];
 		tokens = sCurrentLine.split(" ");
 
@@ -418,31 +418,31 @@ public class MusicParser {
 		
 		switch(value){
 			case "int":
-				node = new DataStructureNode(parent, DataStructureNodeType.INT, checkOperation(sCurrentLine));
+				node = new DataStructureNode(parent, DataStructureNodeType.INT, checkOperation(sCurrentLine), lineNumber);
 			break;
 			
 			case "double":
-				node = new DataStructureNode(parent, DataStructureNodeType.DOUBLE, checkOperation(sCurrentLine));
+				node = new DataStructureNode(parent, DataStructureNodeType.DOUBLE, checkOperation(sCurrentLine), lineNumber);
 			break;
 			
 			case "float":
-				node = new DataStructureNode(parent, DataStructureNodeType.FLOAT, checkOperation(sCurrentLine));
+				node = new DataStructureNode(parent, DataStructureNodeType.FLOAT, checkOperation(sCurrentLine), lineNumber);
 			break;
 			
 			case "String":
-				node = new DataStructureNode(parent, DataStructureNodeType.STRING, checkOperation(sCurrentLine));
+				node = new DataStructureNode(parent, DataStructureNodeType.STRING, checkOperation(sCurrentLine), lineNumber);
 			break;
 			
 			case "char":
-				node = new DataStructureNode(parent, DataStructureNodeType.CHAR, checkOperation(sCurrentLine));
+				node = new DataStructureNode(parent, DataStructureNodeType.CHAR, checkOperation(sCurrentLine), lineNumber);
 			break;
 			
 			case "byte":
-				node = new DataStructureNode(parent, DataStructureNodeType.BYTE, checkOperation(sCurrentLine));
+				node = new DataStructureNode(parent, DataStructureNodeType.BYTE, checkOperation(sCurrentLine), lineNumber);
 			break;
 			
 			case "boolean":
-				node = new DataStructureNode(parent, DataStructureNodeType.BOOLEAN, checkOperation(sCurrentLine));
+				node = new DataStructureNode(parent, DataStructureNodeType.BOOLEAN, checkOperation(sCurrentLine), lineNumber);
 			break;
 		}
 		
